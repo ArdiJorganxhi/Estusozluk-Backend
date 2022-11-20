@@ -25,7 +25,9 @@ namespace EstuSozluk.API
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
                     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
                     .WriteTo.Console())
+                    
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

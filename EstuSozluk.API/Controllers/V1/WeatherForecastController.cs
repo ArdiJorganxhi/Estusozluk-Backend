@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EstuSozluk.API.Models;
+using EstuSozluk.API.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,16 +15,15 @@ namespace EstuSozluk.API.Controllers.V1
     [ApiVersion("1.0")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        
 
-        private readonly ILogger<WeatherForecastController> _logger;
+      
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public EstuSozlukContext _estuSozlukContext;
+
+        public WeatherForecastController(EstuSozlukContext context)
         {
-            _logger = logger;
+            _estuSozlukContext = context;
         }
 
         /// <summary>
@@ -30,16 +32,36 @@ namespace EstuSozluk.API.Controllers.V1
         /// <returns>object</returns>
         [MapToApiVersion("1.0")]
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public object Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+
+            // return _estuSozlukContext.Users.Include(e => e.permissions).Include(t => t.entries).Include(t => t.Followed).Include(t => t.Following).Select(q => new { q.Following }).First();
+            var Context = _estuSozlukContext;
+            var sorgu = Context.Set<User>().Where(e => e.username == "rustuefeuzun")
+                .Select(e => new
+                {
+                    e.username,
+                    e.email,
+                    e.permissions,
+                    Followers = e.Followed.Select(e => e.User1.username).ToList(),
+                    Following = e.Following.Select(e => e.User2.username).ToList(),
+                    LikedEntries = e.LikedEntries.Select(e => new { e.entry.entryid, e.entry.content }).ToList()
+                }).First();
+
+            
+
+            return new
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                sorgu.username,
+                sorgu.email,
+                sorgu.permissions,
+                sorgu.Followers,
+                sorgu.Following,
+                FollowerCount = sorgu.Followers.Count,
+                FollowedCount = sorgu.Following.Count,
+                LikedEntries = sorgu.LikedEntries
+                 
+            };
         }
     }
 }
