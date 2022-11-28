@@ -9,6 +9,8 @@ namespace EstuSozluk.API.Models
       
         public int entryid { get; set; }
         public int userid { get; set; }
+        
+     
         public string titlename { get; set; }
         public string content { get; set; }
         public DateTime writedate { get; set; }

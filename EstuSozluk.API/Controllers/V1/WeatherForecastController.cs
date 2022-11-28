@@ -1,4 +1,4 @@
-﻿using EstuSozluk.API.Models;
+using EstuSozluk.API.Models;
 using EstuSozluk.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +15,6 @@ namespace EstuSozluk.API.Controllers.V1
     [ApiVersion("1.0")]
     public class WeatherForecastController : ControllerBase
     {
-        
-
-      
-
         public EstuSozlukContext _estuSozlukContext;
 
         public WeatherForecastController(EstuSozlukContext context)

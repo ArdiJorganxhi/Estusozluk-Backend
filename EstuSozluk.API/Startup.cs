@@ -37,14 +37,14 @@ namespace EstuSozluk.API
             .AddNewtonsoftJson(options =>
              options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
-
+            
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "Cors",
                     policy =>
                     {
                         policy
-                            .WithOrigins("https://docs.solarproject.click", "https://www.solarproject.click")
+                            .WithOrigins("https://docs.solarproject.click", "https://www.solarproject.click", "http://localhost:3000", "https://localhost:3000", "http://localhost")
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
