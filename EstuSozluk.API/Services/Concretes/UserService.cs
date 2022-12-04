@@ -23,12 +23,23 @@ namespace EstuSozluk.API.Services.Concretes
             _authenticationService = authenticationService;
         }
 
-        public bool CheckIfUserExists(String username)
+        public User GetUser(String username)
         {
 
-            return _estuSozlukContext.Users.Where(e => e.username == username).Count() > 0;
+            var checkIfUserExists = _estuSozlukContext.Users.Where(e => e.username == username).Count();
 
-           
+            if (checkIfUserExists > 0)
+            {
+                return _estuSozlukContext.Users.Select(e => e).First();
+            }
+            else
+            {
+                return null;
+            }
+
+     
+
+
         }
 
         //public object GetUserByUsername(string Username)
@@ -108,6 +119,19 @@ namespace EstuSozluk.API.Services.Concretes
             _estuSozlukContext.Users.Add(userToSave);
             _estuSozlukContext.SaveChanges();
             return userToSave;
+        }
+
+        public Followships Follow(FollowshipsDto followshipsDto)
+        {
+
+            Followships followshipToSave = FollowshipMapper.FollowshipsMapper(followshipsDto);
+
+            _estuSozlukContext.Followships.Add(followshipToSave);
+            _estuSozlukContext.SaveChanges();
+
+            return followshipToSave;
+
+            
         }
     }
 }

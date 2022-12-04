@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EstuSozluk.API.Models;
 using EstuSozluk.API.Models.Dtos;
+using EstuSozluk.API.Models.Mappers;
 using EstuSozluk.API.Services.Abstracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -38,7 +39,7 @@ namespace EstuSozluk.API.Controllers.V1
        
         public IActionResult GetUser(string username)
         {
-            var CheckUser = _LoginService.CheckIfUserExists(username);
+            var CheckUser = _LoginService.GetUser(username);
             return Ok(CheckUser);
         }
 
@@ -66,6 +67,14 @@ namespace EstuSozluk.API.Controllers.V1
             {
                 return Ok(response);
             }
+        }
+
+        [Route("api/[controller]/follow")]
+        [HttpPost]
+
+        public IActionResult FollowUser([FromBody] FollowshipsDto followshipsDto)
+        {
+            return Ok(_LoginService.Follow(followshipsDto));
         }
 
 

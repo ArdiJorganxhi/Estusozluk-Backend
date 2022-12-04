@@ -58,11 +58,11 @@ namespace EstuSozluk.API.Middlewares
 
                 var userEmail = jwtToken.Claims.First(x => x.Type == "email").Value;
                 var userUserName = jwtToken.Claims.First(x => x.Type == "username").Value;
-                var userCanpost = jwtToken.Claims.First(x => x.Type == "canpost").Value;
+               
 
                 Console.WriteLine(userEmail);
                 Console.WriteLine(userUserName);
-                Console.WriteLine(userCanpost);
+                
 
                 User user = estuSozlukContext.Users.Where(e => e.email == userEmail && e.username == userUserName).First();     
                 

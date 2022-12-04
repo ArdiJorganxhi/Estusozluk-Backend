@@ -8,9 +8,11 @@ namespace EstuSozluk.API.Services.Abstracts
     public interface ILoginService
     {
 
-        public bool CheckIfUserExists(String username);
+        public User GetUser(String username);
         public User SaveUser(UserRegistrationDto user);
         public object Login(UserLoginDto UserLoginDto);
+
+        public Followships Follow(FollowshipsDto followshipsDto);
 
         //public object GetUserByUsername(String Username);
 
