@@ -40,11 +40,7 @@ namespace EstuSozluk.API.Controllers.V1
           return Ok(_entryService.AddEntry(entry));
         }
 
-        [HttpGet("{entryid}")]
-        public IActionResult GetEntryById(int entryid)
-        {
-            return Ok(_entryService.GetEntryById(entryid));
-        }
+       
 
         [HttpGet("user/{userid}")]
 
@@ -59,6 +55,19 @@ namespace EstuSozluk.API.Controllers.V1
         {
 
             return Ok(_entryService.GetFirstEntryOfTitle());
+        }
+
+
+        [HttpGet("titles")]
+        public IActionResult GetTitles()
+        {
+            return Ok(_entryService.GetTitles());
+        }
+
+        [HttpGet("{title}")]
+        public IActionResult GetEntriesByTitleName(string title)
+        {
+            return Ok(_entryService.GetEntryByTitleName(title));
         }
 
      

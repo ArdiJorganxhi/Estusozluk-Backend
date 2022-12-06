@@ -14,6 +14,8 @@ namespace EstuSozluk.API.Services.Abstracts
 
         public Followships Follow(FollowshipsDto followshipsDto);
 
+       
+
         //public object GetUserByUsername(String Username);
 
 

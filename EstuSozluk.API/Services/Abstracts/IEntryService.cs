@@ -14,9 +14,11 @@ namespace EstuSozluk.API.Services.Abstracts
 
         public List<Entry> GetEntryByUser(int userId);
 
-
+        public List<string> GetTitles();
 
         public object GetFirstEntryOfTitle();
+
+        public List<Entry> GetEntryByTitleName(string title);
 
 
 

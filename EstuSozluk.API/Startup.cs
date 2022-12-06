@@ -1,4 +1,3 @@
-using System.Text;
 using EstuSozluk.API.Middlewares;
 using EstuSozluk.API.Repositories;
 using EstuSozluk.API.Services.Abstracts;
@@ -11,11 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using MySql.Data.MySqlClient;
-using MySqlConnector.Logging;
 using Serilog;
 
 namespace EstuSozluk.API
@@ -35,16 +29,17 @@ namespace EstuSozluk.API
         {
             services.AddControllersWithViews()
             .AddNewtonsoftJson(options =>
-             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
-            
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
             services.AddCors(options =>
             {
+                var Origins = Configuration["AllowedOrigins"].Split(";");
                 options.AddPolicy(name: "Cors",
                     policy =>
                     {
                         policy
-                            .WithOrigins("https://docs.solarproject.click", "https://www.solarproject.click", "http://localhost:3000", "https://localhost:3000", "http://localhost")
+                            .WithOrigins(Origins)
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
@@ -69,36 +64,17 @@ namespace EstuSozluk.API
             services.AddSwaggerGen();
             services.ConfigureOptions<ConfigureSwaggerOptions>();
 
-            // services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionString:Default"]));
-
-            /*
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                });
-            */
             services.AddMvc();
             services.AddControllers();
-            services.AddRazorPages();
 
-            services.AddDbContext<EstuSozlukContext>(options => {
+            services.AddDbContext<EstuSozlukContext>(options =>
+            {
                 options.UseMySQL(Configuration["ConnectionStrings:Default"]);
             });
 
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEntryService, EntryService>();
-
-
 
         }
 
@@ -114,25 +90,7 @@ namespace EstuSozluk.API
 
             app.UseCors("Cors");
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseSerilogRequestLogging(options =>
-            {
-                //// Customize the message template
-                //options.MessageTemplate = "Handled {RequestPath}";
-
-                //// Emit debug-level events instead of the defaults
-                //options.GetLevel = (httpContext, elapsed, ex) => LogEventLevel.Debug;
-
-                //// Attach additional properties to the request completion event
-                //options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-                //{
-                //    diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-                //    diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
-                //};
-            });
-
+            app.UseSerilogRequestLogging(options => { });
 
             app.UseMiddleware<JwtMiddleware>();
 
@@ -143,18 +101,14 @@ namespace EstuSozluk.API
             //    options.SwaggerEndpoint("/swagger/v2/swagger.yaml", "V2");
             //});
 
-
-
             app.UseRouting();
-            
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapControllers();
-               
             });
         }
     }

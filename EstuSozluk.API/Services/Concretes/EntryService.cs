@@ -21,6 +21,7 @@ namespace EstuSozluk.API.Services.Concretes
             _estuSozlukContext = estuSozlukContext;
             _loginService = loginService;
         }
+
         public Entry AddEntry(EntryDto entry)
         {
             Entry entryToSave = EntryMapper.GetEntryFromEntryDto(entry);
@@ -31,9 +32,9 @@ namespace EstuSozluk.API.Services.Concretes
 
         public Entry GetEntryById(int EntryId)
         {
-            
+
             return _estuSozlukContext.Entries.Where(e => e.entryid == EntryId).First();
-            
+
         }
 
         public List<Entry> GetAllEntries()
@@ -43,24 +44,24 @@ namespace EstuSozluk.API.Services.Concretes
 
 
 
-      
+
 
         public object GetFirstEntryOfTitle()
 
         {
 
             return _estuSozlukContext.Entries
-                .Include(e=> e.LikedEntries)
+                .Include(e => e.LikedEntries)
 
                 .Include(e => e.User)
 
                 .Select(e => e)
                 .ToList()
                 .GroupBy(q => q.titlename)
-                .ToDictionary(e=> e.Key, e => 
+                .ToDictionary(e => e.Key, e =>
 
-                    e.Select(q => new { titleData = LandingMapper.MapFrom(q), likeCount = q.LikedEntries.Count})
-                        .OrderByDescending(asd=>asd.likeCount)
+                    e.Select(q => new { titleData = LandingMapper.MapFrom(q), likeCount = q.LikedEntries.Count })
+                        .OrderByDescending(asd => asd.likeCount)
                         .First()
                 ).ToList();
         }
@@ -70,8 +71,21 @@ namespace EstuSozluk.API.Services.Concretes
 
             return _estuSozlukContext.Entries.Where(e => e.userid == userId).ToList();
 
-               
+
 
         }
+
+        public List<String> GetTitles()
+        {
+            return _estuSozlukContext.Entries.Select(e => e.titlename).Distinct().ToList();
+        }
+
+        public List<Entry> GetEntryByTitleName(string title)
+        {
+            return _estuSozlukContext.Entries.Include(e => e.User).Where(e => e.titlename == title).ToList();
+
+        }
+
+
     }
 }
