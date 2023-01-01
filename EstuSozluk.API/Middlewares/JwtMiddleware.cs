@@ -27,7 +27,7 @@ namespace EstuSozluk.API.Middlewares
 
         public async Task Invoke(HttpContext context, ILoginService LoginService, EstuSozlukContext estuSozlukContext)
         {
-            Console.WriteLine("Aaaaaaaaaa");
+            
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)

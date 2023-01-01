@@ -8,6 +8,7 @@ using EstuSozluk.API.Repositories;
 using EstuSozluk.API.Services.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Abstractions;
 
 namespace EstuSozluk.API.Services.Concretes
 {
@@ -26,18 +27,19 @@ namespace EstuSozluk.API.Services.Concretes
         public User GetUser(String username)
         {
 
-            var checkIfUserExists = _estuSozlukContext.Users.Where(e => e.username == username).Count();
+            var checkIfUserExists = _estuSozlukContext.Users.Where(e => e.username == username).
+                FirstOrDefault();
 
-            if (checkIfUserExists > 0)
+            if (checkIfUserExists != null)
             {
-                return _estuSozlukContext.Users.Select(e => e).First();
+                return checkIfUserExists;
             }
             else
             {
                 return null;
             }
 
-     
+
 
 
         }
@@ -88,8 +90,8 @@ namespace EstuSozluk.API.Services.Concretes
                    e.permissions,
                    Followers = e.Followed.Select(e => e.User1.username).ToList(),
                    Following = e.Following.Select(e => e.User2.username).ToList(),
-                   LikedEntries = e.LikedEntries.Select(e => new { e.entry.entryid, e.entry.content }).ToList(),
-                   DisLikedEntries = e.DislikedEntries.Select(e => new { e.entry.entryid, e.entry.content }).ToList()
+                   LikedEntries = e.LikedEntries.Select(e => new { e.entry.titlename, e.entry.content }).ToList(),
+                   DisLikedEntries = e.DislikedEntries.Select(e => new { e.entry.titlename, e.entry.content }).ToList()
                }).First();
 
             IEnumerable<string> badies = userData.Following.Intersect(userData.Followers);
@@ -132,6 +134,38 @@ namespace EstuSozluk.API.Services.Concretes
             return followshipToSave;
 
             
+        }
+
+        public object UpdateUser(int userid, UserUpdateDto UserUpdateDto)
+        {
+            User userUpdate = UserMapper.GetUserFromUserUpdateDto(UserUpdateDto);
+            var checkUser = _estuSozlukContext.Users.Where(e => e.userid == userid).FirstOrDefault();
+
+            if (checkUser != null)
+            {
+                if (UserUpdateDto.username != null)
+                {
+                    checkUser.username = UserUpdateDto.username;
+                } 
+                
+                if (UserUpdateDto.email != null)
+                {
+                    checkUser.email = UserUpdateDto.email;
+                }
+                
+                _estuSozlukContext.SaveChanges();
+
+
+                return checkUser;
+            }
+            
+            
+            
+            
+
+            return "User not updated!";
+
+
         }
         
         

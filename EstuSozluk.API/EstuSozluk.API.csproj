@@ -40,12 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-    <Folder Include="Services\Abstracts\" />
-    <Folder Include="Services\Concretes\" />
-    <Folder Include="Models\Dtos\" />
-    <Folder Include="Models\Mappers\" />
     <Folder Include="Attributes\" />
   </ItemGroup>
   <PropertyGroup>

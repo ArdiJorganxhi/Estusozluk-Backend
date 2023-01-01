@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EstuSozluk.API.Models;
 using EstuSozluk.API.Models.Dtos;
+using System.Collections.Generic;
 
 namespace EstuSozluk.API.Services.Abstracts
 {
@@ -14,14 +12,15 @@ namespace EstuSozluk.API.Services.Abstracts
 
         public List<Entry> GetEntryByUser(int userId);
 
-        public List<string> GetTitles();
+        public object GetLikedEntryByUser(int userid);
 
-        public object GetFirstEntryOfTitle();
+        public object GetDislikedEntryByUser(int userid);
 
-        public List<Entry> GetEntryByTitleName(string title);
+        public LikedEntries LikeEntry(LikedEntriesDto likedEntriesDto);
 
+        public DislikedEntries DislikeEntry(DislikedEntriesDto dislikedEntriesDto);
 
-
+        public Entry DeleteEntry(int entryid);
 
     }
 }

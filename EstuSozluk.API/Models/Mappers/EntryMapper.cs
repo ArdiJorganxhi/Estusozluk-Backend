@@ -12,7 +12,7 @@ namespace EstuSozluk.API.Models.Mappers
 
             
             entry.userid = entryDto.userid;
-            entry.titlename = entryDto.titlename;
+            entry.titlename = entryDto.titlename.ToLower();
             entry.content = entryDto.content;
             entry.writedate = DateTime.Now;
             entry.editdate = DateTime.Now;

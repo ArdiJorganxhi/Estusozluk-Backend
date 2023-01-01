@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
-using EstuSozluk.API.Models;
 using EstuSozluk.API.Models.Dtos;
-using EstuSozluk.API.Models.Mappers;
 using EstuSozluk.API.Repositories;
 using EstuSozluk.API.Services.Abstracts;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +15,6 @@ namespace EstuSozluk.API.Controllers.V1
         private IEntryService _entryService;
         private EstuSozlukContext _estuSozlukContext;
 
-
         public EntryController(IConfiguration configuration, IEntryService entryService, EstuSozlukContext estuSozlukContext)
         {
             _configuration = configuration;
@@ -35,12 +30,8 @@ namespace EstuSozluk.API.Controllers.V1
         [Authorize]
         public IActionResult AddNewEntry([FromBody] EntryDto entry)
         {
-           
-          
-          return Ok(_entryService.AddEntry(entry));
+            return Ok(_entryService.AddEntry(entry));
         }
-
-       
 
         [HttpGet("user/{userid}")]
 
@@ -50,28 +41,40 @@ namespace EstuSozluk.API.Controllers.V1
             return Ok(_entryService.GetEntryByUser(userid));
         }
 
-        [HttpGet("landing")]
-        public IActionResult GetEntriesByTitle()
-        {
+        [HttpGet("user/liked/{userid}")]
 
-            return Ok(_entryService.GetFirstEntryOfTitle());
+        public IActionResult GetLikedEntryByUser(int userid)
+        {
+            return Ok(_entryService.GetLikedEntryByUser(userid));
         }
 
+        [HttpGet("user/disliked/{userid}")]
 
-        [HttpGet("titles")]
-        public IActionResult GetTitles()
+        public IActionResult GetDislikedEntryByUser(int userid)
         {
-            return Ok(_entryService.GetTitles());
+            return Ok(_entryService.GetDislikedEntryByUser(userid));
         }
 
-        [HttpGet("{title}")]
-        public IActionResult GetEntriesByTitleName(string title)
+        [HttpPost("like")]
+        [Authorize]
+        public IActionResult LikeEntry([FromBody] LikedEntriesDto likedEntriesDto)
         {
-            return Ok(_entryService.GetEntryByTitleName(title));
+            return Ok(_entryService.LikeEntry(likedEntriesDto));
         }
 
-     
-        
-        
+        [HttpPost("dislike")]
+        [Authorize]
+        public IActionResult DislikeEntry([FromBody] DislikedEntriesDto dislikedEntriesDto)
+        {
+            return Ok(_entryService.DislikeEntry(dislikedEntriesDto));
+        }
+
+        [HttpDelete("delete/{entryid}")]
+        [Authorize]
+
+        public IActionResult DeleteEntry(int entryid)
+        {
+            return Ok(_entryService.DeleteEntry(entryid));
+        }
     }
 }

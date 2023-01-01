@@ -25,6 +25,16 @@ namespace EstuSozluk.API.Models.Mappers
 
             return user;
         }
+
+        public static User GetUserFromUserUpdateDto(UserUpdateDto UserUpdateDto)
+        {
+            User user = new User();
+            user.username = UserUpdateDto.username;
+            user.email = UserUpdateDto.email;
+            user.password = "";
+
+            return user;
+        }
         public UserMapper()
         {
         }

@@ -71,10 +71,19 @@ namespace EstuSozluk.API.Controllers.V1
 
         [Route("api/[controller]/follow")]
         [HttpPost]
-
+  
         public IActionResult FollowUser([FromBody] FollowshipsDto followshipsDto)
         {
             return Ok(_LoginService.Follow(followshipsDto));
+        }
+
+        [Route("api/[controller]/update/{userid}")]
+        [HttpPut]
+        [Authorize]
+
+        public IActionResult UpdateUser(int userid, [FromBody] UserUpdateDto userUpdateDto)
+        {
+            return Ok(_LoginService.UpdateUser(userid, userUpdateDto));
         }
 
 
