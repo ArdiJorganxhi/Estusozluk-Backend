@@ -4,7 +4,7 @@ namespace EstuSozluk.API.Models.Mappers
 {
     public class LandingMapper
     {
-        public static LandingPageResponse MapFrom(Entry entry, int LikeCount)
+        public static LandingPageResponse MapFrom(Entry entry, int LikeCount, int DislikeCount)
         {
 
             LandingPageResponse response = new LandingPageResponse();
@@ -18,6 +18,7 @@ namespace EstuSozluk.API.Models.Mappers
             response.userid = entry.userid;
             response.username = entry.User.username;
             response.LikeCount = LikeCount;
+            response.DislikeCount = DislikeCount;
 
             return response;
 

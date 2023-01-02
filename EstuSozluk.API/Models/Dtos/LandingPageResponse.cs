@@ -13,6 +13,8 @@ namespace EstuSozluk.API.Models.Dtos
         public int userid { get; set; }
         public string username { get; set; }
         public int LikeCount { get; set; }
+        
+        public int DislikeCount { get; set; }
 
     }
 }

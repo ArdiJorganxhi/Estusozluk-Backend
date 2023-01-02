@@ -44,12 +44,13 @@ namespace EstuSozluk.API.Services.Concretes
         {
             return _estuSozlukContext.Entries
                 .Include(e => e.LikedEntries)
+                .Include(e => e.DislikedEntries)
                 .Include(e => e.User)
                 .Select(e => e)
                 .ToList()
                 .GroupBy(q => q.titlename)
                 .ToDictionary(e => e.Key, e =>
-                    e.Select(q => LandingMapper.MapFrom(q, q.LikedEntries.Count))
+                    e.Select(q => LandingMapper.MapFrom(q, q.LikedEntries.Count, q.DislikedEntries.Count))
                         .OrderByDescending(z => z.LikeCount)
                         .First()
                 ).ToList();

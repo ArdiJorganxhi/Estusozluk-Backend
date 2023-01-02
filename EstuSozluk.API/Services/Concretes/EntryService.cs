@@ -39,21 +39,23 @@ namespace EstuSozluk.API.Services.Concretes
             return _estuSozlukContext.Entries.Select(e => e).ToList();
         }
 
-        public List<Entry> GetEntryByUser(int userId)
+        public object GetEntryByUser(int userId)
         {
-            return _estuSozlukContext.Entries.Where(e => e.userid == userId).ToList();
+            return _estuSozlukContext.Entries.Where(e => e.userid == userId).Select(
+                e => new {e.entryid, e.titlename, e.content, e.writedate}
+                ).ToList();
         }
 
         public object GetLikedEntryByUser(int userid)
         {
             return _estuSozlukContext.LikedEntries.Where(e => e.userid == userid)
-                .Select(e => new { e.entry.titlename, e.entry.content, e.entry.writedate }).ToList();
+                .Select(e => new { e.entry.entryid, e.entry.titlename, e.entry.content, e.entry.writedate }).ToList();
         }
 
         public object GetDislikedEntryByUser(int userid)
         {
             return _estuSozlukContext.DislikedEntries.Where(e => e.userid == userid)
-                .Select(e => new { e.entry.titlename, e.entry.content, e.entry.writedate }).ToList();
+                .Select(e => new { e.entry.entryid, e.entry.titlename, e.entry.content, e.entry.writedate }).ToList();
 
         }
 

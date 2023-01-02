@@ -10,7 +10,7 @@ namespace EstuSozluk.API.Services.Abstracts
         public Entry GetEntryById(int EntryId);
         public List<Entry> GetAllEntries();
 
-        public List<Entry> GetEntryByUser(int userId);
+        public object GetEntryByUser(int userId);
 
         public object GetLikedEntryByUser(int userid);
 

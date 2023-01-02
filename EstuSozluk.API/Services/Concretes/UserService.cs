@@ -23,8 +23,10 @@ namespace EstuSozluk.API.Services.Concretes
             _estuSozlukContext = context;
             _authenticationService = authenticationService;
         }
+        
+        
 
-        public User GetUser(String username)
+        public object GetUser(String username)
         {
 
             var checkIfUserExists = _estuSozlukContext.Users.Where(e => e.username == username).
@@ -32,7 +34,32 @@ namespace EstuSozluk.API.Services.Concretes
 
             if (checkIfUserExists != null)
             {
-                return checkIfUserExists;
+                var userData = _estuSozlukContext.Set<User>().Where(e => e.username == username)
+                    .Select(e => new
+                    {
+                        e.userid,
+                        e.username,
+                        e.email,
+                        e.permissions,
+                        Followers = e.Followed.Select(e => e.User1.username).ToList(),
+                        Following = e.Following.Select(e => e.User2.username).ToList(),
+                       
+                    }).First();
+                
+                IEnumerable<string> badies = userData.Following.Intersect(userData.Followers);
+
+                return new
+                {
+                    userData.userid,
+                    userData.username,
+                    userData.email,
+                    userData.permissions,
+                    userData.Following,
+                    FollowerCount = userData.Followers.Count,
+                    FollowedCount = userData.Following.Count,
+                    badies = badies,
+                    badieCount = badies.Count()
+                };
             }
             else
             {
